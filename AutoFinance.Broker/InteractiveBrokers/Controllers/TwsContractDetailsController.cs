@@ -35,7 +35,7 @@ namespace AutoFinance.Broker.InteractiveBrokers
         /// <summary>
         /// Stores the results of contract details responses from IB.
         /// </summary>
-        private ConcurrentDictionary<int, ContractDetails> contractDetailsPerRequest;
+        public ConcurrentDictionary<int, ContractDetails> contractDetailsPerRequest;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TwsContractDetailsController"/> class.

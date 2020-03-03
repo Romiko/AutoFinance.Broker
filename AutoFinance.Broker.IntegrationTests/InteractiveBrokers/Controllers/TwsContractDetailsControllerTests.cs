@@ -76,5 +76,33 @@
             // Tear down
             await connectionController.DisconnectAsync();
         }
+
+        [Fact]
+        public async Task Should_ReturnAmbiguousContract()
+        {
+            // Setup
+            TwsObjectFactory twsObjectFactory = new TwsObjectFactory();
+
+            TwsConnectionController connectionController = new TwsConnectionController(twsObjectFactory.ClientSocket, twsObjectFactory.TwsCallbackHandler, "localhost", 7462, 1);
+            TwsContractDetailsController contractDetailsController = new TwsContractDetailsController(twsObjectFactory.ClientSocket, twsObjectFactory.TwsCallbackHandler, new TwsRequestIdGenerator());
+
+            await connectionController.EnsureConnectedAsync();
+
+            Contract contract = new Contract();
+            contract.Symbol = "MSFT";
+            contract.SecType = TwsContractSecType.Stock;
+            contract.Currency = "USD";
+
+            // Call
+            ContractDetails contractDetails = await contractDetailsController.GetContractAsync(contract);
+
+            // Assert
+            contractDetails.Should().NotBeNull();
+            contractDetails.Summary.PrimaryExch.Should().Be("NASDAQ");
+            contractDetails.Summary.Exchange.Should().Be("SMART");
+
+            // Tear down
+            await connectionController.DisconnectAsync();
+        }
     }
 }
